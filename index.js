@@ -38,6 +38,7 @@ async function deployChanges(token) {
 
     return await fetch(`${ apiUri }/git/pull`, options).then(response => {
         return response.json().then(data => {
+            info(`Success. Operation ID: ${ response.status }`);
             return {
                 ok: response.ok,
                 code: response.status,
@@ -60,6 +61,7 @@ async function run() {
         }
 
         await deployChanges(oauthToken.access_token).then(response => {
+            console.log('response', JSON.stringify(response, null, 2));
             if (!response.ok) {
                 throw new Error(response.body.error_description);
             }
