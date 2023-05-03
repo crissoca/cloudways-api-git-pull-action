@@ -1,11 +1,11 @@
-const core = require('@actions/core');
-const fetch = require('node-fetch');
+import fetch from 'node-fetch'
+import { getInput, info, setFailed, setOutput } from '@actions/core';
 const apiUri = 'https://api.cloudways.com/api/v1';
 
 async function getOauthToken() {
     const body = {
-        email: core.getInput('email'),
-        api_key: core.getInput('api-key')
+        email: getInput('email'),
+        api_key: getInput('api-key')
     };
 
     const options = {
@@ -21,10 +21,10 @@ async function getOauthToken() {
 
 async function deployChanges(token) {
     const body = {
-        server_id: core.getInput('server-id'),
-        app_id: core.getInput('app-id'),
-        branch_name: core.getInput('branch-name'),
-        deploy_path: core.getInput('deploy-path'),
+        server_id: getInput('server-id'),
+        app_id: getInput('app-id'),
+        branch_name: getInput('branch-name'),
+        deploy_path: getInput('deploy-path'),
     };
 
     const options = {
@@ -64,11 +64,11 @@ async function run() {
                 throw new Error(response.body.error_description);
             }
 
-            core.info(`Success. Operation ID: ${ response.body.operation_id }`);
-            core.setOutput('operation', response.body.operation_id);
+            info(`Success. Operation ID: ${ response.body.operation_id }`);
+            setOutput('operation', response.body.operation_id);
         });
     } catch (error) {
-        core.setFailed(error.message);
+        setFailed(error.message);
     }
 }
 
